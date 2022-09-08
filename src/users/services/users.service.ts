@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository, InjectConnection } from '@nestjs/typeorm';
 import { DataSource, Repository, Connection } from 'typeorm';
 import { createUserDto } from '../dto/create.user.dto';
-import { User } from '../entities/user.entity';
+import { User } from '../../entities/user.entity';
 
 @Injectable()
 export class UsersService {
@@ -34,15 +34,16 @@ export class UsersService {
     // return await this.usersRepository.save(user);
     const sql = `
       INSERT INTO user 
-      (name, age, isActive) 
+      (email, password, name) 
       VALUES 
       (?, ?, ?)`;
 
     const result = await this.dataSource.manager.query(sql, [
+      user.email,
+      user.password,
       user.name,
-      user.age,
-      user.isActive,
     ]);
+    console.log({ result });
 
     return result;
   }
@@ -84,6 +85,39 @@ export class UsersService {
     // await this.usersRepository.update(id, { name: 'meta100' });
     const sql = `UPDATE user SET ? WHERE id=?;`;
     const result = await this.dataSource.manager.query(sql, [content, id]);
+
+    return result;
+  }
+
+  async createGallery(galleryName, userId) {
+    const sql = `INSERT INTO gallery (name, userId) VALUES (?, ?);`;
+    const result = await this.dataSource.manager.query(sql, [
+      galleryName,
+      userId,
+    ]);
+
+    return result;
+  }
+
+  async subscribe(userId, galleryId) {
+    const sql = `INSERT INTO gallery_subscribers_user (galleryId, userId) VALUES (?, ?);`;
+    const result = await this.dataSource.manager.query(sql, [
+      galleryId,
+      userId,
+    ]);
+
+    return result;
+  }
+
+  async createArtWork(userId, info) {
+    const sql = `INSERT INTO art_work (name, description, url, ownerId) VALUES (? , ? , ?, ?);`;
+    const { name, description, artWorkUrl } = info;
+    const result = await this.dataSource.manager.query(sql, [
+      name,
+      description,
+      artWorkUrl,
+      userId,
+    ]);
 
     return result;
   }

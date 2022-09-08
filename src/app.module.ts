@@ -5,7 +5,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { DataSource } from 'typeorm';
 import { UsersModule } from './users/users.module';
-import { User } from './users/entities/user.entity';
+import { User } from './entities/user.entity';
+import { Gallery } from './entities/gallery.entity';
+import { ArtWork } from './entities/artwork.entity';
 
 @Module({
   imports: [
@@ -17,7 +19,7 @@ import { User } from './users/entities/user.entity';
       username: process.env.MYSQL_USERNAME,
       password: process.env.MYSQL_PASSWORD,
       database: process.env.MYSQL_DATABASENAME,
-      entities: [User],
+      entities: [User, Gallery, ArtWork],
       synchronize: true,
       autoLoadEntities: true, // 자동으로 entity를 불러온다.
     }),

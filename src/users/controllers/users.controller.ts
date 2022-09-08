@@ -39,4 +39,20 @@ export class UsersController {
   async update(@Param('id') id: string, @Body() body) {
     return await this.usersService.update(Number(id), body);
   }
+
+  @Post(':id/gallery')
+  async createGallery(@Body() body, @Param('id') id) {
+    const galleryName = body.name;
+    await this.usersService.createGallery(galleryName, id);
+  }
+
+  @Post(':userId/subscribe/:galleryId')
+  async subscribe(@Param('userId') userId, @Param('galleryId') galleryId) {
+    await this.usersService.subscribe(userId, galleryId);
+  }
+
+  @Post(':userId/artwork')
+  async createArtWork(@Param('userId') userId, @Body() body) {
+    await this.usersService.createArtWork(userId, body);
+  }
 }
